@@ -1,0 +1,2 @@
+/* usersテーブル */
+INSERT IGNORE INTO users (id, name, furigana, email, password, enabled) VALUES (1, '馬塲 孝佳', 'ババ タカヨシ', 'test@example.com', '$2a$10$2JNjTwZBwo7fprL2X4sv.OEKqxnVtsVQvuXDkI8xVGix.U3W5B7CO', true)
