@@ -3,8 +3,10 @@
 <head>
 	<div th:fragment="meta" th:remove="tag">
 		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
 	</div>
-	<div th:fragment="styles" th:remove="tag"></div>
+	<div th:fragment="styles" th:remove="tag">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">	</div>
 
 <title>部品化用のHTML</title>
 </head>
@@ -29,13 +31,13 @@
 							
 							<!-- ログイン済みであれば表示する -->
 							<li sec:authorize="isAuthenticated()">
-								<a href="#">
+								<a th:href="@{/user/home}">
 									<span sec:authentication="principal.user.name"></spam>
 								</a>
 								
 								<div>
-									<a href="#">単語帳一覧</a>
-									<a href="#">単語帳作成</a>
+									<a th:href="@{/user/home}">単語帳一覧</a>
+									<a th:href="@{/vocabulary-books/new}">単語帳作成</a>
 									<a th:href="@{/logout}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
 										ログアウト
 									</a>
@@ -56,6 +58,8 @@
 			</div>
 		</footer>
 	</div>
-
+	
+	<div th:fragment="scripts" th:remove="tag">
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 </body>
 </html>
