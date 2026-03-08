@@ -22,14 +22,14 @@ public class Word {
 	private Integer id;
 	
 	@Column(name = "word")
-	private String title;
+	private String name;
 	
 	@Column(name = "meaning")
 	private String meaning;
 	
 	@ManyToOne
 	@JoinColumn(name = "vocabulary_book_id")
-	private VocabularyBook svocaburaryBook;
+	private VocabularyBook vocabularyBook;
 	
 	@Column(name = "created_at", insertable = false, updatable = false)
 	private Timestamp createdAt;

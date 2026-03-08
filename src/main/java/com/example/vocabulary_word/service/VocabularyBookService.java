@@ -10,6 +10,8 @@ import com.example.vocabulary_word.entity.VocabularyBook;
 import com.example.vocabulary_word.repository.UserRepository;
 import com.example.vocabulary_word.repository.VocabularyBookRepository;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @Service
 public class VocabularyBookService {
 	private final VocabularyBookRepository vocabularyBookRepository;
@@ -18,6 +20,10 @@ public class VocabularyBookService {
 	public VocabularyBookService(VocabularyBookRepository vocabularyBookRepository, UserRepository userRepository) {
 		this.vocabularyBookRepository = vocabularyBookRepository;
 		this.userRepository = userRepository;
+	}
+	
+	public VocabularyBook findById(Integer id) {
+		return vocabularyBookRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Book not found"));
 	}
 	
 	public List<VocabularyBook> findByUserId(Integer userId) {
@@ -32,6 +38,11 @@ public class VocabularyBookService {
 		book.setUser(user);
 		
 		vocabularyBookRepository.save(book);
+	}
+	
+	public VocabularyBook findByIdAndUserId(Integer id, Integer userId) {
+		
+		return vocabularyBookRepository.findByIdAndUserId(id, userId).orElseThrow(() -> new IllegalArgumentException("単語帳が見つかりません"));
 	}
 	
 	@Transactional

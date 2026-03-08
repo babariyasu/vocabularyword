@@ -14,7 +14,9 @@
 
 		<ul>
 			<li th:each="book : ${vocabularyBooks}">
-				<a href="#" th:text="${book.title}"></a>
+				<a th:href="@{/vocabulary-books/{id}(id=${book.id})}" th:text="${book.title}"></a>
+				<a th:href="@{/vocabulary-books/{id}/study(id=${book.id})}">学習</a>
+				<a th:href="@{/vocabulary-books/{id}(id=${book.id})}">詳細</a>
 				<button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editModal"
 					th:data-id="${book.id}" th:data-title="${book.title}">編集</button>
 				<button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal"

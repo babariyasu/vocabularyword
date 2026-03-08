@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymleaf.org/extras/spring-security">
+
+<head>
+	<div th:replace="~{fragment :: meta}"></div>
+	<div th:replace="~{fragment :: styles}"></div>
+	<title>単語学習</title>
+</head>
+
+<body>
+	<div th:replace="~{fragment :: header}"></div>
+	<main>
+		<h1 th:text="${vocabularyBookTitle}"></h1>
+		<p id="word"></p>
+		<p id="meaning" style="display:none;"></p>
+
+		<button onclick="toggleMeaning()" id="meaningButton">意味を見る</button>
+
+		<div>
+			<label>
+				<input type="checkbox" id="correctCheckbox">
+				正解したらチェック
+			</label>
+		</div>
+
+		<div>
+			<button onclick="prevWord()">前へ</button>
+			<button onclick="nextWord()">次へ</button>
+		</div>
+
+		<p id="progress"></p>
+
+		<button onclick="finishStudy()">学習終了</button>
+
+		<p id="result"></p>
+	</main>
+
+	<div th:replace="~{fragment :: footer}"></div>
+	<div th:replace="~{fragment :: scripts}"></div>
+
+	<script th:inline="javascript">
+		let words = [];
+		let index = 0;
+		let correctAnswers = [];
+
+		const bookId = /*[[${bookId}]]*/ 0;
+
+		fetch(`/api/vocabulary-books/${bookId}/words`)
+			.then(response => response.json())
+			.then(data => {
+				words = data;
+				shuffle(words);
+
+				correctAnswers = new Array(words.length).fill(false);
+
+				if (words.length > 0) {
+					showWord();
+				} else {
+					document.getElementById("word").textContent = "単語がありません";
+				}
+			});
+
+		//チェック状態を保存する
+		document.getElementById("correctCheckbox").addEventListener("change", function () {
+			correctAnswers[index] = this.checked
+		});
+
+		function showWord() {
+			document.getElementById("word").textContent = words[index].name;
+			document.getElementById("meaning").textContent = words[index].meaning;
+
+			document.getElementById("progress").textContent = `${index + 1} / ${words.length}`;
+
+			document.getElementById("meaning").style.display = "none";
+			document.getElementById("meaningButton").textContent = "意味を見る";
+
+			document.getElementById("correctCheckbox").checked = correctAnswers[index];
+		}
+
+		function shuffle(array) {
+			for (let i = array.length - 1; i > 0; i--) {
+				const j = Math.floor(Math.random() * (i + 1));
+				[array[i], array[j]] = [array[j], array[i]];
+			}
+		}
+
+		function toggleMeaning() {
+
+			const meaning = document.getElementById("meaning");
+			const button = document.getElementById("meaningButton");
+
+			if (meaning.style.display === "none") {
+				meaning.style.display = "block";
+				button.textContent = "意味を閉じる";
+			} else {
+				meaning.style.display = "none";
+				button.textContent = "意味を見る";
+			}
+		}
+
+		function nextWord() {
+			index++;
+
+			if (index >= words.length) {
+				index = 0;
+			}
+
+			showWord();
+		}
+
+		function prevWord() {
+			index--;
+
+			if (index < 0) {
+				index = words.length - 1;
+			}
+
+			showWord();
+		}
+
+		function finishStudy() {
+			let correctCount = correctAnswers.filter(c => c).length;
+
+			let rate = Math.round((correctCount / words.length) * 100);
+
+			document.getElementById("result").textContent = `正解数: ${correctCount} / ${words.length} 正答率: ${rate}%`;
+		}
+	</script>
+</body>
+
+</html>
