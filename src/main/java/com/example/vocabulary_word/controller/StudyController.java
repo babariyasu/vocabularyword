@@ -1,34 +1,27 @@
 package com.example.vocabulary_word.controller;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-
-import com.example.vocabulary_word.entity.VocabularyBook;
-import com.example.vocabulary_word.service.VocabularyBookService;
-import com.example.vocabulary_word.service.WordService;
 
 @Controller
 public class StudyController {
-	private final VocabularyBookService vocabularyBookService;
-	private final WordService wordService;
+//	private final VocabularyBookService vocabularyBookService;
+//	private final WordService wordService;
 
-	public StudyController(VocabularyBookService vocabularyBookService, WordService wordService) {
-		this.vocabularyBookService = vocabularyBookService;
-		this.wordService = wordService;
-	}
-
-	@GetMapping("/vocabulary-books/{id}/study")
-	public String study(@PathVariable Integer id, Model model) {
-
-		VocabularyBook vocabularyBook = vocabularyBookService.findById(id);
-
-		model.addAttribute("bookId", id);
-		model.addAttribute("vocabularyBookTitle", vocabularyBook.getTitle());
-
-		return "word/study";
-	}
+//	public StudyController(VocabularyBookService vocabularyBookService, WordService wordService) {
+//		this.vocabularyBookService = vocabularyBookService;
+//		this.wordService = wordService;
+//	}
+//
+//	@GetMapping("/vocabulary-books/{id}/study")
+//	public String study(@PathVariable Integer id, Model model) {
+//
+//		VocabularyBook vocabularyBook = vocabularyBookService.findById(id);
+//
+//		model.addAttribute("bookId", id);
+//		model.addAttribute("vocabularyBookTitle", vocabularyBook.getTitle());
+//
+//		return "word/study";
+//	}
 
 	//	@GetMapping("/vocabulary-books/")
 	//	public String study(@PathVariable Integer id, 

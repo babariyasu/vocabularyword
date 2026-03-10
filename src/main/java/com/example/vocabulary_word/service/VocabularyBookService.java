@@ -1,6 +1,7 @@
 package com.example.vocabulary_word.service;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +24,11 @@ public class VocabularyBookService {
 	}
 	
 	public VocabularyBook findById(Integer id) {
-		return vocabularyBookRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Book not found"));
+		return vocabularyBookRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("単語帳が見つかりません。"));
+	}
+	
+	public VocabularyBook findByShareUuid(String uuid) {
+		return vocabularyBookRepository.findByShareUuid(uuid).orElseThrow(() -> new EntityNotFoundException("単語帳が見つかりません。"));
 	}
 	
 	public List<VocabularyBook> findByUserId(Integer userId) {
@@ -36,6 +41,9 @@ public class VocabularyBookService {
 		
 		User user = userRepository.findById(userId).orElseThrow();
 		book.setUser(user);
+		
+		String shareUuid = UUID.randomUUID().toString();
+		book.setShareUuid(shareUuid);
 		
 		vocabularyBookRepository.save(book);
 	}

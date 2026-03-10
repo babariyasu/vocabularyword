@@ -11,5 +11,7 @@ public interface VocabularyBookRepository extends JpaRepository<VocabularyBook, 
 	
 	List<VocabularyBook> findByUserId(Integer userId);
 	
+	Optional<VocabularyBook> findByShareUuid(String uuid);
+	
 	Optional<VocabularyBook> findByIdAndUserId(Integer id, Integer userid);
 }

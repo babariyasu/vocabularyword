@@ -11,9 +11,21 @@
 	<div th:replace="~{fragment :: header}"></div>
 	<main>
 		<h1 th:text="${book.title}"></h1>
-		<!-- <a th:href="@{/vocabulary-books/{id}/study(id=${book.id})}">単語帳を開く</a> -->
+		<div>
+			<a th:href="@{/vocabulary-books/{id}/study(id=${book.id})}" class="btn btn-primary btn-sm">学習を始める</a>
+
+			<button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editBookModal"
+				th:data-id="${book.id}" th:data-title="${book.title}">編集</button>
+			<button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteBookModal"
+				th:data-id="${book.id}" th:data-title="${book.title}">削除</button>
+		</div>
 		
-		<a th:href="@{/vocabulary-books/{id}/study(id=${book.id})}">単語帳を開く</a>
+		<div>
+			<label>共有URL</label>
+			<input type="text" id="shareUrl" th:value="${shareUrl}" readonly>
+			<button onclick="copyUrl()">コピー</button>
+			<span id = "copyMessage"></span>
+		</div>
 
 		<div>
 			<button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addWordModal">単語を追加する</button>
@@ -22,12 +34,89 @@
 			<li th:each="word : ${words}">
 				<a href="#" th:text="${word.name}"></a>
 				<a href="#" th:text="${word.meaning}"></a>
-				<button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editModal" th:data-id="${word.id}" 
-					th:data-name="${word.name}" th:data-meaning="${word.meaning}">編集</button>
-				<button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal"
-					th:data-word-id="${word.id}">削除</button>
+				<button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+					data-bs-target="#editWordModal" th:data-id="${word.id}" th:data-name="${word.name}"
+					th:data-meaning="${word.meaning}">編集</button>
+				<button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"
+					data-bs-target="#deleteWordModal" th:data-word-id="${word.id}">削除</button>
 			</li>
 		</ul>
+
+		<!-- 編集用モーダル -->
+		<div class="modal fade" id="editBookModal" tabindex="-1">
+			<div class="modal-dialog">
+				<div class="modal-content">
+
+					<div class="modal-header">
+						<h5 class="modal-title">単語帳編集</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+					</div>
+
+					<form id="editBookForm" method="post">
+						<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+						<div class="modal-body">
+
+							<input type="hidden" name="id" id="editBookId">
+
+							<div class="mb-3">
+								<label class="form-label">タイトル</label>
+								<input type="text" class="form-control" name="title" id="editBookTitle" required>
+							</div>
+
+						</div>
+
+						<div class="modal-footer">
+							<button type="submit" class="btn btn-primary">
+								更新する
+							</button>
+
+							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+								キャンセル
+							</button>
+						</div>
+					</form>
+
+				</div>
+			</div>
+		</div>
+		<!-- 削除確認モーダル -->
+		<div class="modal fade" id="deleteBookModal" tabindex="-1">
+			<div class="modal-dialog">
+				<div class="modal-content">
+
+					<div class="modal-header">
+						<h5 class="modal-title">削除確認</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+					</div>
+
+					<div class="modal-body">
+						<p>
+							<span id="modalBookTitle"></span>
+							を本当に削除しますか？
+						</p>
+					</div>
+
+					<div class="modal-footer">
+
+						<form id="deleteBookForm" method="post">
+
+							<!-- CSRFトークン -->
+							<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+							<button type="submit" class="btn btn-danger">
+								削除する
+							</button>
+						</form>
+
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+							キャンセル
+						</button>
+
+					</div>
+
+				</div>
+			</div>
+		</div>
 
 		<!-- 単語追加モーダル -->
 		<div class="modal fade" id="addWordModal" tabindex="-1">
@@ -77,7 +166,7 @@
 		</div>
 
 		<!-- 編集モーダル -->
-		<div class="modal fade" id="editModal" tabindex="-1">
+		<div class="modal fade" id="editWordModal" tabindex="-1">
 			<div class="modal-dialog">
 				<div class="modal-content">
 
@@ -86,7 +175,7 @@
 						<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 					</div>
 
-					<form id="editForm" method="post">
+					<form id="editWordForm" method="post">
 
 						<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
@@ -120,7 +209,7 @@
 		</div>
 
 		<!-- 削除確認モーダル -->
-		<div class="modal fade" id="deleteModal" tabindex="-1">
+		<div class="modal fade" id="deleteWordModal" tabindex="-1">
 			<div class="modal-dialog">
 				<div class="modal-content">
 
@@ -135,7 +224,7 @@
 
 					<div class="modal-footer">
 
-						<form id="deleteForm" method="post">
+						<form id="deleteWordForm" method="post">
 							<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
 							<button type="submit" class="btn btn-danger">
@@ -155,44 +244,12 @@
 	<div th:replace="~{fragment :: footer}"></div>
 	<div th:replace="~{fragment :: scripts}"></div>
 
-	<script>
-		document.addEventListener("DOMContentLoaded", function () {
+	<script th:src="@{/js/vocabularyBook/shareUrl.js}"></script>
+	<script th:src="@{/js/vocabularyBook/edit.js}"></script>
+	<script th:src="@{/js/vocabularyBook/delete.js}"></script>
 
-			const editModal = document.getElementById("editModal");
-
-			editModal.addEventListener("show.bs.modal", function (event) {
-
-				const button = event.relatedTarget;
-
-				const id = button.getAttribute("data-id");
-				const name = button.getAttribute("data-name");
-				const meaning = button.getAttribute("data-meaning");
-
-				document.getElementById("editName").value = name;
-				document.getElementById("editMeaning").value = meaning;
-
-				const form = document.getElementById("editForm");
-				form.action = "/words/" + id + "/update";
-			});
-		});
-	</script>
-
-	<script>
-		document.addEventListener("DOMContentLoaded", function () {
-
-			const deleteModal = document.getElementById("deleteModal");
-
-			deleteModal.addEventListener("show.bs.modal", function (event) {
-
-				const button = event.relatedTarget;
-				const wordId = button.getAttribute("data-word-id");
-
-				const form = document.getElementById("deleteForm");
-
-				form.action = "/words/" + wordId + "/delete";
-			});
-		});
-	</script>
+	<script th:src="@{/js/word/edit.js}"></script>
+	<script th:src="@{/js/word/delete.js}"></script>
 </body>
 
 </html>
