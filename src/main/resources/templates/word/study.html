@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymleaf.org/extras/spring-security">
+<html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
 	<div th:replace="~{fragment :: meta}"></div>
@@ -9,6 +9,7 @@
 
 <body>
 	<div th:replace="~{fragment :: header}"></div>
+	<div th:replace="~{fragment :: createBookModal}"></div>
 	<main>
 		<h1 th:text="${vocabularyBookTitle}"></h1>
 		<p id="word"></p>

@@ -42,7 +42,9 @@ public class WordService {
 	
 	@Transactional
 	public Integer delete(Integer wordId, Integer userId) {
-		Word word = wordRepository.findByIdAndVocabularyBook_User_Id(wordId, userId).orElseThrow();
+		Word word = wordRepository
+				.findByIdAndVocabularyBook_User_Id(wordId, userId)
+				.orElseThrow(() -> new IllegalArgumentException("権限がありません"));
 		
 		Integer bookId = word.getVocabularyBook().getId();
 		
@@ -54,7 +56,8 @@ public class WordService {
 	@Transactional
 	public Integer update(Integer wordId, String name, String meaning, Integer userId) {
 		Word word = wordRepository
-				.findByIdAndVocabularyBook_User_Id(wordId, userId).orElseThrow();
+				.findByIdAndVocabularyBook_User_Id(wordId, userId)
+				.orElseThrow(() -> new IllegalArgumentException("権限がありません"));
 		
 		word.setName(name);
 		word.setMeaning(meaning);

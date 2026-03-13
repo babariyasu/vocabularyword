@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymleaf.org/extras/spring-security">
+<html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
 	<div th:replace="~{fragment :: meta}"></div>
@@ -9,36 +9,54 @@
 
 <body>
 	<div th:replace="~{fragment :: header}"></div>
+	<div th:replace="~{fragment :: createBookModal}"></div>
 	<main>
 		<h1 th:text="${book.title}"></h1>
-		<div>
-			<a th:href="@{/vocabulary-books/{id}/study(id=${book.id})}" class="btn btn-primary btn-sm">学習を始める</a>
-
-			<button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editBookModal"
-				th:data-id="${book.id}" th:data-title="${book.title}">編集</button>
-			<button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteBookModal"
-				th:data-id="${book.id}" th:data-title="${book.title}">削除</button>
+		
+		<!-- お気に入りチェックボックス -->
+		<div th:if="${loginUserId != null and loginUserId != book.user.id}">
+			<form th:action="@{}" method="post">
+				<input type="checkbox"
+						id="favorite"
+						th:checked="${isFavorite}"
+						th:data-book-id="${book.id}">
+			</form>	
 		</div>
 		
 		<div>
+			<a th:href="@{/vocabulary-books/{id}/study(id=${book.id})}" class="btn btn-primary btn-sm">学習を始める</a>
+
+
+			<div th:if="${loginuserId == book.user.id}">
+				<button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+					data-bs-target="#editBookModal" th:data-id="${book.id}" th:data-title="${book.title}">編集</button>
+				<button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"
+					data-bs-target="#deleteBookModal" th:data-id="${book.id}" th:data-title="${book.title}">削除</button>
+			</div>
+		</div>
+
+		<div th:if="${loginUserId == book.user.id}">
 			<label>共有URL</label>
 			<input type="text" id="shareUrl" th:value="${shareUrl}" readonly>
 			<button onclick="copyUrl()">コピー</button>
-			<span id = "copyMessage"></span>
+			<span id="copyMessage"></span>
 		</div>
 
-		<div>
+		<div th:if="${loginUserId == book.user.id}">
 			<button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addWordModal">単語を追加する</button>
 		</div>
+		<p>登録済み単語リスト</p>
 		<ul>
 			<li th:each="word : ${words}">
 				<a href="#" th:text="${word.name}"></a>
 				<a href="#" th:text="${word.meaning}"></a>
-				<button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
-					data-bs-target="#editWordModal" th:data-id="${word.id}" th:data-name="${word.name}"
-					th:data-meaning="${word.meaning}">編集</button>
-				<button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"
-					data-bs-target="#deleteWordModal" th:data-word-id="${word.id}">削除</button>
+				<div th:if="${loginUserId == book.user.id}">
+					<button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+						data-bs-target="#editWordModal" th:data-id="${word.id}" th:data-name="${word.name}"
+						th:data-meaning="${word.meaning}">編集</button>
+					<button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"
+						data-bs-target="#deleteWordModal" th:data-word-id="${word.id}">削除</button>
+				</div>
 			</li>
 		</ul>
 

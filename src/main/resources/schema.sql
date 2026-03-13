@@ -28,3 +28,14 @@ CREATE TABLE IF NOT EXISTS words (
 	updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	FOREIGN KEY (vocabulary_book_id) REFERENCES vocabulary_books (id)
 );
+
+CREATE TABLE IF NOT EXISTS favorite_books (
+	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	user_id INT NOT NULL,
+	vocabulary_book_id INT NOT NULL,
+	created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	FOREIGN KEY (user_id) REFERENCES users (id),
+	FOREIGN KEY (vocabulary_book_id) REFERENCES vocabulary_books (id),
+	
+	UNIQUE (user_id, vocabulary_book_id)
+);

@@ -1,5 +1,8 @@
 /* usersテーブル */
-INSERT IGNORE INTO users (id, name, furigana, email, password, enabled) VALUES (1, '馬塲 孝佳', 'ババ タカヨシ', 'test@example.com', '$2a$10$2JNjTwZBwo7fprL2X4sv.OEKqxnVtsVQvuXDkI8xVGix.U3W5B7CO', true);
+INSERT IGNORE INTO users (id, name, furigana, email, password, enabled) VALUES 
+(1, '馬塲 孝佳', 'ババ タカヨシ', 'test@example.com', '$2a$10$2JNjTwZBwo7fprL2X4sv.OEKqxnVtsVQvuXDkI8xVGix.U3W5B7CO', true),
+(2, '馬塲 孝佳', 'ババ タカヨシ', 'test2@example.com', '$2a$10$2JNjTwZBwo7fprL2X4sv.OEKqxnVtsVQvuXDkI8xVGix.U3W5B7CO', true),
+(3, '馬塲 孝佳3', 'ババ タカヨシ', 'test3@example.com', '$2a$10$2JNjTwZBwo7fprL2X4sv.OEKqxnVtsVQvuXDkI8xVGix.U3W5B7CO', true);
 
 /* vocabulary_booksテーブル */
 INSERT IGNORE INTO vocabulary_books (id, title, user_id) VALUES 

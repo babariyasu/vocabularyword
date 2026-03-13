@@ -16,15 +16,15 @@ public class ShareController {
 		this.vocabularyBookService = vocabularyBookService;
 	}
 	
-	@GetMapping("share/{UUID}")
+	@GetMapping("/share/{uuid}")
 	public String share(@PathVariable String uuid, Model model) {
 		VocabularyBook vocabularyBook = vocabularyBookService.findByShareUuid(uuid);
-		Integer bookId = vocabularyBook.getId();
+		Integer id = vocabularyBook.getId();
 		
-		model.addAttribute("bookId", bookId);
+		model.addAttribute("bookId", id);
 		model.addAttribute("vocabularyBookTitle", vocabularyBook.getTitle());
 		
-		return "share";
+		return "redirect:/vocabulary-books/" + id;
 	}
 
 }

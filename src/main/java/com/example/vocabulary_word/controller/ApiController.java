@@ -2,7 +2,6 @@ package com.example.vocabulary_word.controller;
 
 import java.util.List;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,16 +9,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.vocabulary_word.dto.WordDto;
+import com.example.vocabulary_word.service.FavoriteBookService;
 import com.example.vocabulary_word.service.WordService;
 
-@Controller
 @RestController
 @RequestMapping("/api")
 public class ApiController {
 	private final WordService wordService;
+	private final FavoriteBookService favoriteBookService;
 	
-	public ApiController(WordService wordService) {
+	public ApiController(WordService wordService, FavoriteBookService favoriteBookService) {
 		this.wordService = wordService;
+		this.favoriteBookService = favoriteBookService;
 	}
 	
 	@ResponseBody
@@ -30,4 +31,16 @@ public class ApiController {
 				.map(WordDto::from)
 				.toList();
 	}
+	
+//	@PostMapping("/favorites")
+//	public void toggleFavorite(@RequestBody FavoriteRequest request,
+//			@AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
+//
+//		Integer userId = userDetailsImpl.getUser().getId();
+//
+//		favoriteBookService.toggleFavorite(
+//				userId,
+//				request.getBookId(),
+//				request.isFavorite());
+//	}
 }

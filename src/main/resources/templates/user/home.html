@@ -9,12 +9,14 @@
 
 <body>
 	<div th:replace="~{fragment :: header}"></div>
+	<div th:replace="~{fragment :: createBookModal}"></div>
 	<main>
 		<h1>単語帳一覧</h1>
 		<ul>
 			<li th:each="book : ${vocabularyBooks}">
 				<p th:text="${book.title}"></p>
-				<a th:href="@{/vocabulary-books/{id}/study(id=${book.id})}" class="btn btn-primary btn-sm" role="button">学習を始める</a>			
+				<a th:href="@{/vocabulary-books/{id}/study(id=${book.id})}" class="btn btn-primary btn-sm"
+					role="button">学習を始める</a>
 				<a th:href="@{/vocabulary-books/{id}(id=${book.id})}" class="btn btn-primary btn-sm">詳細</a>
 			</li>
 		</ul>

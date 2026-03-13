@@ -35,7 +35,7 @@ public class VocabularyBookService {
 		return vocabularyBookRepository.findByUserId(userId);
 	}
 	
-	public void createVocabularyBook(String title, Integer userId) {
+	public VocabularyBook createVocabularyBook(String title, Integer userId) {
 		VocabularyBook book = new VocabularyBook();
 		book.setTitle(title);
 		
@@ -46,10 +46,11 @@ public class VocabularyBookService {
 		book.setShareUuid(shareUuid);
 		
 		vocabularyBookRepository.save(book);
+		
+		return book;
 	}
 	
 	public VocabularyBook findByIdAndUserId(Integer id, Integer userId) {
-		
 		return vocabularyBookRepository.findByIdAndUserId(id, userId).orElseThrow(() -> new IllegalArgumentException("単語帳が見つかりません"));
 	}
 	
@@ -57,14 +58,16 @@ public class VocabularyBookService {
 	public void deleteByIdAndUserId(Integer bookId, Integer userId) {
 		VocabularyBook vocabularyBook = vocabularyBookRepository
 				.findByIdAndUserId(bookId, userId)
-				.orElseThrow(() -> new IllegalArgumentException("不正なアクセスです"));
+				.orElseThrow(() -> new IllegalArgumentException("権限がありません"));
 		
 		vocabularyBookRepository.delete(vocabularyBook);
 	}
 	
 	@Transactional
 	public void updateTitle(Integer id, String title, Integer userId) {
-		VocabularyBook book = vocabularyBookRepository.findByIdAndUserId(id, userId).orElseThrow();
+		VocabularyBook book = vocabularyBookRepository
+				.findByIdAndUserId(id, userId)
+				.orElseThrow(() -> new IllegalArgumentException("権限がありません"));
 		
 		book.setTitle(title);
 		

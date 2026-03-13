@@ -6,7 +6,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,15 +36,16 @@ public class VocabularyBookController {
 		return "vocabulary-books/new";
 	}
 	
-	@PostMapping
-	public String create(@ModelAttribute VocabularyBook vocabularyBook,
+	@PostMapping("/create")
+	public String create(@RequestParam String title,
 							@AuthenticationPrincipal UserDetailsImpl userDetails) 
 	{
+		
 		Integer userId = userDetails.getUser().getId();
 		
-		vocabularyBookService.createVocabularyBook(vocabularyBook.getTitle(), userId);
+		VocabularyBook vocabularyBook = vocabularyBookService.createVocabularyBook(title, userId);
 		
-		return "redirect:/user/home";
+		return "redirect:/vocabulary-books/" + vocabularyBook.getId();
 	}
 	
 	@GetMapping("/{id}")
@@ -54,9 +54,13 @@ public class VocabularyBookController {
 							HttpServletRequest request,
 							Model model) 
 	{
-		Integer userId = userDetailsImpl.getUser().getId();
+		Integer userId = null;
 		
-		VocabularyBook book = vocabularyBookService.findByIdAndUserId(id, userId);
+		if (userDetailsImpl != null) {
+			userId = userDetailsImpl.getUser().getId();
+		}
+
+		VocabularyBook book = vocabularyBookService.findById(id);
 		
 		String baseUrl = request.getRequestURL().toString().replace(request.getRequestURI(), "");
 		
@@ -67,6 +71,7 @@ public class VocabularyBookController {
 		model.addAttribute("book", book);
 		model.addAttribute("shareUrl", shareUrl);
 		model.addAttribute("words", words);
+		model.addAttribute("loginUserId", userId);
 		
 		return "word/list";
 	}

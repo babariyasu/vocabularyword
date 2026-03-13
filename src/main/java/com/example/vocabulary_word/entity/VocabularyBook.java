@@ -45,5 +45,8 @@ public class VocabularyBook {
 	
 	@OneToMany(mappedBy = "vocabularyBook", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
 	private List<Word> words;
+	
+	@OneToMany(mappedBy = "vocabularyBook", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+	private List<FavoriteBook> favoriteBooks;
 
 }
